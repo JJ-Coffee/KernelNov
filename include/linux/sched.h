@@ -1386,12 +1386,14 @@ struct task_struct {
 	short nice_backup;
 	atomic_t inherit_types;
 #endif
-
 	struct {
 		struct work_struct work;
 		atomic_t running;
 		bool free_stack;
 	} async_free;
+#ifdef CONFIG_ANDROID_SIMPLE_LMK
+	struct task_struct		*simple_lmk_next;
+#endif
 
 	/*
 	 * New fields for task_struct should be added above here, so that
@@ -1727,6 +1729,11 @@ static inline int set_cpus_allowed_ptr(struct task_struct *p, const struct cpuma
 	return 0;
 }
 #endif
+
+void sched_migrate_to_cpumask_start(struct cpumask *old_mask,
+				    const struct cpumask *dest);
+void sched_migrate_to_cpumask_end(const struct cpumask *old_mask,
+				  const struct cpumask *dest);
 
 #ifndef cpu_relax_yield
 #define cpu_relax_yield() cpu_relax()
