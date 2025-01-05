@@ -127,9 +127,9 @@ config MTK_QOS_V2
 	  If unsure, say N.
 
 config MTK_NFC_CLKBUF_ENABLE
-    tristate "Enable NFC Clock Buffer"
-    default n
+    bool "Enable clock buffer for NFC"
+    default y
     ---help---
       Enable this option to turn on NFC clock buffer support.
-      Choose 'Y' to build into the kernel, or 'M' to build as a module.
+      Choose 'Y' to build into the kernel, or 'N' to skipp build into the kernel.
       
