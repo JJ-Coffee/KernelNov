@@ -1533,23 +1533,20 @@ void clk_buf_post_init(void)
 	CLK_BUF7_STATUS = CLOCK_BUFFER_DISABLE;
 #endif
 
-#if defined(CONFIG_MTK_NFC_CLKBUF_ENABLE)
-	/* Enable NFC clock buffer if support is enabled */
-	if (is_nfc_support()) {
-		clk_buf_ctrl_internal(CLK_BUF_NFC, CLK_BUF_FORCE_ON);
-		CLK_BUF3_STATUS = CLOCK_BUFFER_ENABLE;
-	} else {
-		clk_buf_ctrl_internal(CLK_BUF_NFC, CLK_BUF_FORCE_OFF);
-		CLK_BUF3_STATUS = CLOCK_BUFFER_DISABLE;
-	}
-#elif !defined(CONFIG_NFC_CHIP_SUPPORT)
-	/* Disable NFC clock buffer if not supported */
+#ifndef CONFIG_MTK_NFC_CLKBUF_ENABLE
+    /* no need to use XO_NFC if no NFC */
+    clk_buf_ctrl_internal(CLK_BUF_NFC, CLK_BUF_FORCE_OFF);
+    CLK_BUF3_STATUS = CLOCK_BUFFER_DISABLE;
+#endif
+
+#ifndef CONFIG_NFC_CHIP_SUPPORT
+	/* no need to use XO_NFC if no NFC */
 	if (!is_nfc_support()) {
+		/* no need to use XO_NFC if no NFC */
 		clk_buf_ctrl_internal(CLK_BUF_NFC, CLK_BUF_FORCE_OFF);
 		CLK_BUF3_STATUS = CLOCK_BUFFER_DISABLE;
 	}
 #endif
-
 #ifdef CLKBUF_USE_BBLPM
 	if (bblpm_switch == 2) {
 		clk_buf_ctrl_bblpm_mask(CLK_BUF_BB_MD, true);
@@ -1561,7 +1558,6 @@ void clk_buf_post_init(void)
 			clk_buf_ctrl_bblpm_hw(false);
 	}
 #endif
-}
 
 
 	/* save setting after init done */
