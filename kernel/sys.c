@@ -1199,12 +1199,18 @@ SYSCALL_DEFINE1(newuname, struct new_utsname __user *, name)
 #ifdef CONFIG_KSU_SUSFS_SPOOF_UNAME
 	susfs_spoof_uname(&tmp);
 #endif
-	if (!strncmp(current->comm, "netbpfload", 10) &&
+	if (!strncmp(current->comm, "netbpfload", sizeof("netbpfload") - 1) &&
 	    current->pid != netbpfload_pid) {
 		netbpfload_pid = current->pid;
-		strcpy(tmp.release, "6.6.40");
-		pr_debug("fake uname: %s/%d release=%s\n",
-			 current->comm, current->pid, tmp.release);
+		
+		if (!strcmp(tmp.release, utsname()->release)) {
+            strscpy(tmp.release, "6.6.40", sizeof(tmp.release));
+            pr_debug("fake uname (netbpfload override): %s/%d release=%s\n",
+                     current->comm, current->pid, tmp.release);
+        } else {
+            pr_debug("fake uname (susfs_spoof_uname precedence): %s/%d release=%s\n",
+                current->comm, current->pid, tmp.release);
+        }
 	}
 	up_read(&uts_sem);
 	if (copy_to_user(name, &tmp, sizeof(tmp)))
