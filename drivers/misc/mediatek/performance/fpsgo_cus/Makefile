@@ -47,8 +47,7 @@ ccflags-y += \
 	     -I$(FBT_TOP)/include/ \
 
 obj-m += fpsgo.o
-fpsgo-y += src/fpsgo_main.o \
-            src/xgf_v3_ko_arm64.o
+fpsgo-y += src/fpsgo_main.o
 
 ifeq (y,$(CONFIG_MTK_FPSGO_V3))
 	ifeq (y,$(CONFIG_THUMB2_KERNEL))
@@ -70,3 +69,5 @@ else
 		fpsgo-y += src/xgf_v3_ko_quark.o
 	endif
 endif
+
+src/xgf_v3_ko_arm64.o: ;
