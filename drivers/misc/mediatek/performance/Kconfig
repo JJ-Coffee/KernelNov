@@ -89,13 +89,3 @@ config MTK_GBE
 	  boost Game Engine while gaming for better gaming experience
 	  This function depends on MTK_FPSGO_V3.
 	  If you are not sure about this, please set n.
-
-config MTK_FPSGO_CUS
-	bool "MTK GBE support"
-	depends on MTK_FPSGO_V3
-	default n
-	help
-	  MTK_FPSGO_CUS is the kernel config of FPSGO CUSTOM.
-	  FPSGO CUSTOM DEFAULT by XIAOMI.
-	  If you are not sure about this, please set n.
-	  
